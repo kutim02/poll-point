@@ -45,6 +45,7 @@ export async function creates() {
       id bigint AUTO_INCREMENT PRIMARY KEY,
       userId bigint,
       qId bigint,
+      answer boolean,
       FOREIGN KEY (userId) REFERENCES users(id), 
       FOREIGN KEY (qId) REFERENCES questions(id));
     `);
