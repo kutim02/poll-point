@@ -4,14 +4,24 @@ const insertQuestion = (text, userId, categoryId) => {
   pool.query(
     'INSERT INTO pollpoint.questions (text, userId, catId) VALUES (?, ?, ?)',
     [text, userId, categoryId],
-    (insertErr) => {
+    (insertErr, result) => {
       if (insertErr) {
-        console.log(`Question insertion failed: ${insertErr}`);
+        console.error(`Question insertion failed: ${insertErr}`);
         return -1;
       }
-      console.log('Question inserted.');
-      return 0;
-    },
+
+      const insertedId = result.insertId;
+
+      const insertedQuestion = {
+        id: insertedId,
+        text: text,
+        userId: userId,
+        categoryId: categoryId,
+      };
+
+      console.log('Inserted Question:', insertedQuestion);
+      return insertQuestion;
+    }
   );
 };
 

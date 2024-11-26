@@ -6,7 +6,7 @@ import { creates } from './db/create.js';
 import loginRouter from './routes/loginRouter.js';
 import logoutRouter from './routes/logoutRouter.js';
 import userRouter from './routes/userRouter.js';
-// import questionRouter from './routes/questionRouter.js';
+import questionRouter from './routes/questionRouter.js';
 import categoryRouter from './routes/categoryRouter.js';
 // import answerRouter from './routes/answerRouter.js';
 import authMiddleware from './middlewares/auth.js';
@@ -36,13 +36,13 @@ app.get('/', (req, res) => {
 app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
 app.use('/users', userRouter);
-// app.use('/questions', questionRouter);
+app.use('/questions', questionRouter);
 app.use('/categories', categoryRouter);
 // app.use('/answers', answerRouter);
 
 app.use(authMiddleware);
 
-app.listen(3000, () => {
-    console.log('Server listening on 3000');
+app.listen(8080, () => {
+    console.log('Server listening on 8080');
 });
   
