@@ -2,7 +2,7 @@ import pool from '../connection.js';
 
 const insertUser = (username, password) => {
   pool.query(
-    'INSERT INTO pollpoint.users (username, password) VALUES (?, ?)',
+    'INSERT INTO pollpoint.users (username, password) VALUES (?, ?);',
     [username, password],
     (insertErr) => {
       if (insertErr) {
@@ -16,7 +16,7 @@ const insertUser = (username, password) => {
 };
 
 const getUser = async (username) => {
-  const query = 'SELECT id FROM pollpoint.users WHERE username = ?';
+  const query = 'SELECT * FROM pollpoint.users WHERE username = ?';
   const [user] = await pool.query(query, username);
   if (user.length === 0) {
     return -1;
@@ -24,14 +24,14 @@ const getUser = async (username) => {
   return user[0];
 };
 
-const getUserPassword = async (id) => {
-  const query = 'SELECT password FROM pollpoint.users WHERE id = ?';
-  const [password] = await pool.query(query, id);
-  if (password.length === 0) {
-    return -1;
-  }
-  return password;
-}
+// const getUserPassword = async (id) => {
+//   const query = 'SELECT password FROM pollpoint.users WHERE id = ?';
+//   const [password] = await pool.query(query, id);
+//   if (password.length === 0) {
+//     return -1;
+//   }
+//   return password[0].password;
+// }
 
 const getUsernameById = async (id) => {
   const query = 'SELECT id FROM pollpoint.users WHERE id = ?';
@@ -49,9 +49,8 @@ const getAllUsers = async () => {
 };
 
 export {
-  insertUser,
-  getUser,
-  getUserPassword,
-  getUsernameById,
-  getAllUsers,
+  getAllUsers, getUser,
+  //getUserPassword,
+  getUsernameById, insertUser
 };
+

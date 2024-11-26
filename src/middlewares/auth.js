@@ -15,7 +15,7 @@ function authorize() {
       return;
     }
 
-    if (!req.session.role) {
+    if (!req.session.userId) {
       res.status(401).send('You are not logged in.');
     } else {
       next();

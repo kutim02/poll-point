@@ -17,11 +17,10 @@ const insertCategory = (name) => {
 
 const getAllCategories = async () => {
   const query = 'SELECT * FROM pollpoint.categories';
-  const [categories] = await pool.query(query);
+  const categories = await pool.query(query);
   return categories;
 };
 
 export {
-  insertCategory,
-  getAllCategories,
+  getAllCategories, insertCategory
 };

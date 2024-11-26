@@ -2,7 +2,7 @@ import pool from '../connection.js';
 
 const insertSession = (userId) => {
   pool.query(
-    'INSERT INTO pollpoint.sessions (userId) VALUES ?',
+    'INSERT INTO pollpoint.sessions (userId) VALUES (?)',
     [userId],
     (insertErr) => {
       if (insertErr) {
@@ -16,7 +16,7 @@ const insertSession = (userId) => {
 };
 const deleteSession = (id) => {
   pool.query(
-    'DELETE FROM pollpoint.sessions WHERE id = ?',
+    'DELETE FROM pollpoint.sessions WHERE id = (?)',
     [id],
     (deleteErr) => {
       if (deleteErr) {
@@ -30,6 +30,5 @@ const deleteSession = (id) => {
 };
 
 export {
-  insertSession,
-  deleteSession,
+  deleteSession, insertSession
 };
