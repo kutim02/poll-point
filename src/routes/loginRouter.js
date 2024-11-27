@@ -33,7 +33,7 @@ router.post('/', async (req, res) => {
       req.session.userId = userId;
       insertSession(userId);
       res.status(200).cookie('userId', userId, {
-      httpOnly: true, 
+      httpOnly: false, 
       secure: false,  
       maxAge: 3600000
       }).send();
