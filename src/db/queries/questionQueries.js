@@ -1,28 +1,23 @@
 import pool from '../connection.js';
 
-const insertQuestion = (text, userId, categoryId) => {
-  pool.query(
+const insertQuestion = async (text, userId, catId) => {
+  await pool.query(
     'INSERT INTO pollpoint.questions (text, userId, catId) VALUES (?, ?, ?)',
-    [text, userId, categoryId],
-    (insertErr, result) => {
+    [text, userId, catId],
+    (insertErr) => {
       if (insertErr) {
-        console.error(`Question insertion failed: ${insertErr}`);
+        console.log(`Question insertion failed: ${insertErr}`);
         return -1;
       }
-
-      const insertedId = result.insertId;
-
-      const insertedQuestion = {
-        id: insertedId,
-        text: text,
-        userId: userId,
-        categoryId: categoryId,
-      };
-
-      console.log('Inserted Question:', insertedQuestion);
-      return insertQuestion;
-    }
+      console.log('Question inserted.');
+      
+    },
   );
+  const idResult = await pool.query(
+    'SELECT LAST_INSERT_ID() as id', []
+  );
+  console.log(idResult);
+  return  idResult[0][0]?.id;
 };
 
 const getQuestionsByUser = async (userId) => {
@@ -44,8 +39,6 @@ const getAllQuestions = async () => {
 };
 
 export {
-  insertQuestion,
-  getQuestionsByUser,
-  getQuestionsByCategory,
-  getAllQuestions,
+  getAllQuestions, getQuestionsByCategory, getQuestionsByUser, insertQuestion
 };
+
