@@ -6,6 +6,7 @@ import session from 'express-session';
 import http from "http";
 import { WebSocket, WebSocketServer } from "ws";
 import { creates } from './db/create.js';
+import { getGroupedAnswersByQuestionId, insertAnswer } from './db/queries/answerQueries.js';
 import { getAllQuestions, insertQuestion } from './db/queries/questionQueries.js';
 import authMiddleware from './middlewares/auth.js';
 import answerRouter from './routes/answerRouter.js';
@@ -13,7 +14,6 @@ import categoryRouter from './routes/categoryRouter.js';
 import loginRouter from './routes/loginRouter.js';
 import logoutRouter from './routes/logoutRouter.js';
 import userRouter from './routes/userRouter.js';
-import { insertAnswer, getGroupedAnswers, getGroupedAnswersByQuestionId } from './db/queries/answerQueries.js';
 
 creates();
 
@@ -73,7 +73,7 @@ wss.on("connection", async (ws) => {
     console.log('--- message type: ', message.type);
 
     if (message.type === 'answer') {
-      insertAnswer(message.userId, message.questionId, message.answer);
+      await insertAnswer(message.userId, message.questionId, message.answer);
 
       const { trueCount, falseCount } = await getGroupedAnswersByQuestionId(message.questionId);
 
