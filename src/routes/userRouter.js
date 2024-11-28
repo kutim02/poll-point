@@ -20,7 +20,7 @@ router.post('/', async(req, res) => {
     }
 });
 
-router.get('/:id/questions', async (req, res) => { //websockettel majd
+router.get('/:id/questions', async (req, res) => {
     try {
         const { id } = req.params; 
         console.log(id);

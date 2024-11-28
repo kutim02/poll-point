@@ -69,9 +69,6 @@ wss.on("connection", async (ws) => {
   ws.on("message", async (data) => {
     const message = JSON.parse(data);
 
-    console.log('*** message: ', message);
-    console.log('--- message type: ', message.type);
-
     if (message.type === 'answer') {
       await insertAnswer(message.userId, message.questionId, message.answer);
 
@@ -91,7 +88,6 @@ wss.on("connection", async (ws) => {
       console.log(`[${id}] submitted a new question: '${message.text}'`);
 
       const qId = await insertQuestion(message.text, message.userId, message.category);
-      console.log(qId);
       const newMessage = {"type": "message", "text": message.text, "category": message.category, "id": qId, "userId": message.userId}
       wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {

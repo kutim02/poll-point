@@ -24,15 +24,6 @@ const getUser = async (username) => {
   return user[0];
 };
 
-// const getUserPassword = async (id) => {
-//   const query = 'SELECT password FROM pollpoint.users WHERE id = ?';
-//   const [password] = await pool.query(query, id);
-//   if (password.length === 0) {
-//     return -1;
-//   }
-//   return password[0].password;
-// }
-
 const getUsernameById = async (id) => {
   const query = 'SELECT id FROM pollpoint.users WHERE id = ?';
   const [user] = await pool.query(query, id);
@@ -50,7 +41,6 @@ const getAllUsers = async () => {
 
 export {
   getAllUsers, getUser,
-  //getUserPassword,
   getUsernameById, insertUser
 };
 
