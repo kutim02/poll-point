@@ -90,16 +90,24 @@ wss.on("connection", async (ws) => {
     } else if (message.type === 'message') {
       console.log(`[${id}] submitted a new question: '${message.text}'`);
 
-      console.log(await insertQuestion(message.text, message.userId, message.category));
-      
+      const qId = await insertQuestion(message.text, message.userId, message.category);
+      console.log(qId);
+      const newMessage = {"type": "message", "text": message.text, "category": message.category, "id": qId, "userId": message.userId}
       wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
           client.send(JSON.stringify({ 
-            type: "question", 
-            question: message,
+            type: "question",
+            question: newMessage,
             trueCount: 0,
             falseCount: 0
           }));
+          console.log(JSON.stringify({ 
+            type: "question",
+            id: qId,
+            question: message,
+            trueCount: 0,
+            falseCount: 0
+          }))
         }
       });
     }

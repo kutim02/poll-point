@@ -21,6 +21,12 @@ const getAllAnswersByQuestionId = async (questionId) => {
   return answers;
 };
 
+const getAnswerByQuestionIdAndUserId = async (questionId, userId) => {
+  const query = 'SELECT * FROM pollpoint.answers WHERE qId = ? AND userId = ?';
+  const [answer] = await pool.query(query, [questionId, userId]);
+  return answer;
+};
+
 const getGroupedAnswers = async () => {
   const query = `
     SELECT 
@@ -51,7 +57,8 @@ const getGroupedAnswersByQuestionId = async (questionId) => {
 };
 
 export {
-  getAllAnswersByQuestionId,
-  getGroupedAnswers, getGroupedAnswersByQuestionId, insertAnswer
+  getAllAnswersByQuestionId, getAnswerByQuestionIdAndUserId, getGroupedAnswers,
+  getGroupedAnswersByQuestionId,
+  insertAnswer
 };
 
