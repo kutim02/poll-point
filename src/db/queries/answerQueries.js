@@ -1,7 +1,7 @@
 import pool from '../connection.js';
 
-const insertAnswer = (userId, questionId, answer) => {
-  pool.query(
+const insertAnswer = async (userId, questionId, answer) => {
+  await pool.query(
     'INSERT INTO pollpoint.answers (userId, qId, answer) VALUES (?, ?, ?)',
     [userId, questionId, answer],
     (insertErr) => {
@@ -52,8 +52,6 @@ const getGroupedAnswersByQuestionId = async (questionId) => {
 
 export {
   getAllAnswersByQuestionId,
-  getGroupedAnswers,
-  insertAnswer,
-  getGroupedAnswersByQuestionId,
+  getGroupedAnswers, getGroupedAnswersByQuestionId, insertAnswer
 };
 
