@@ -36,9 +36,24 @@ const getGroupedAnswers = async () => {
   return results;
 };
 
+const getGroupedAnswersByQuestionId = async (questionId) => {
+  const query = `
+    SELECT 
+      SUM(answer = true) AS trueCount,
+      SUM(answer = false) AS falseCount
+    FROM 
+      pollpoint.answers
+    WHERE 
+      qId = ?;
+  `;
+  const [results] = await pool.query(query, [questionId]);
+  return results[0];
+};
+
 export {
   getAllAnswersByQuestionId,
   getGroupedAnswers,
-  insertAnswer
+  insertAnswer,
+  getGroupedAnswersByQuestionId,
 };
 

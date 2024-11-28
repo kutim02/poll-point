@@ -13,6 +13,7 @@ import categoryRouter from './routes/categoryRouter.js';
 import loginRouter from './routes/loginRouter.js';
 import logoutRouter from './routes/logoutRouter.js';
 import userRouter from './routes/userRouter.js';
+import { insertAnswer, getGroupedAnswers, getGroupedAnswersByQuestionId } from './db/queries/answerQueries.js';
 
 creates();
 
@@ -55,23 +56,53 @@ wss.on("connection", async (ws) => {
   console.log(`[${id}] Socket connected`);
 
   const oldQuestions = await getAllQuestions();
-  console.log(oldQuestions + "hi");
-  oldQuestions.forEach((question) => {
-    ws.send(JSON.stringify({ type: 'message', question }));
+  oldQuestions.forEach(async (question) => {
+    const { trueCount, falseCount } = await getGroupedAnswersByQuestionId(question.id);
+    ws.send(JSON.stringify({ 
+      type: 'question', 
+      question, 
+      trueCount,
+      falseCount 
+    }));
   });
-  // uj kerdes
-  ws.on("message", async(data) => {
-    const question = JSON.parse(data);
-    console.log(`[${id}] submitted a new question: '${question.text}'`);
 
-    // mindenki megkapja
-    wss.clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify({ type: "message", question }));
-      }
-    });
-    await insertQuestion(question.text, question.userId, question.category);
+  ws.on("message", async (data) => {
+    const message = JSON.parse(data);
 
+    console.log('*** message: ', message);
+    console.log('--- message type: ', message.type);
+
+    if (message.type === 'answer') {
+      insertAnswer(message.userId, message.questionId, message.answer);
+
+      const { trueCount, falseCount } = await getGroupedAnswersByQuestionId(message.questionId);
+
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify({
+            type: "answer",
+            questionId: message.questionId,
+            trueCount,
+            falseCount
+          }));
+        }
+      });
+    } else if (message.type === 'message') {
+      console.log(`[${id}] submitted a new question: '${message.text}'`);
+
+      console.log(await insertQuestion(message.text, message.userId, message.category));
+      
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify({ 
+            type: "question", 
+            question: message,
+            trueCount: 0,
+            falseCount: 0
+          }));
+        }
+      });
+    }
   });
 
   ws.on("close", () => {
